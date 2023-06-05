@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+  mysql-db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_USER=petclinic
+      - MYSQL_PASSWORD=petclinic
+      - MYSQL_DATABASE=petclinic
+    volumes:
+      - "./conf.d:/etc/mysql/conf.d:ro"
+
+  spring-petclinic:
+    image: signoz/spring-petclinic:latest
+    ports:
+      - "8090:8090"
+    extra_hosts:
+      - "signoz:host-gateway"
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=spring-petclinic
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://signoz:4317  # Replace with SigNoz OTLP endpoint, if SigNoz not running on host machine
+      - DATABASE=mysql
+      - MYSQL_URL=jdbc:mysql://mysql-db:3306/petclinic
+      - MYSQL_DATABASE=petclinic
+      - MYSQL_USER=petclinic
+      - MYSQL_PASS=petclinic
