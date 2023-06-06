@@ -1,18 +1,22 @@
 version: "2"
 
 services:
-  mysql-db:
-    image: mysql:5.7
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_USER=petclinic
-      - MYSQL_PASSWORD=petclinic
-      - MYSQL_DATABASE=petclinic
-    volumes:
-      - "./conf.d:/etc/mysql/conf.d:ro"
+  # TODO: Spring Petclinic is not working with MySQL DB, need to fix it.
+  #       Currently, it is using default H2 DB.
+  #
+  # mysql-db:
+  #   image: mysql:5.7
+  #   restart: always
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=
+  #     - MYSQL_ALLOW_EMPTY_PASSWORD=true
+  #     - MYSQL_USER=petclinic
+  #     - MYSQL_PASSWORD=petclinic
+  #     - MYSQL_DATABASE=petclinic
+  #   volumes:
+  #     - "./conf.d:/etc/mysql/conf.d:ro"
 
   spring-petclinic:
     image: signoz/spring-petclinic:latest
@@ -23,8 +27,8 @@ services:
     environment:
       - OTEL_RESOURCE_ATTRIBUTES=service.name=spring-petclinic
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://signoz:4317  # Replace with SigNoz OTLP endpoint, if SigNoz not running on host machine
-      - DATABASE=mysql
-      - MYSQL_URL=jdbc:mysql://mysql-db:3306/petclinic
-      - MYSQL_DATABASE=petclinic
-      - MYSQL_USER=petclinic
-      - MYSQL_PASS=petclinic
+      # - DATABASE=mysql
+      # - MYSQL_URL=jdbc:mysql://mysql-db/petclinic
+      # - MYSQL_DATABASE=petclinic
+      # - MYSQL_USER=petclinic
+      # - MYSQL_PASS=petclinic
